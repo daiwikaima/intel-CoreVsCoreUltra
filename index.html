@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CPU SELECT SCREEN</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{--cy:#22d3ee;--bl:#3b82f6;--mg:#e879f9;--yl:#ffe94a;--tx:#fff;--f:'Press Start 2P','Courier New',monospace}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:#03030f;color:var(--tx);font-family:var(--f);overflow:hidden}
+#app{position:fixed;inset:0;overflow:hidden;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0);background:linear-gradient(#02020a,#0a0a4a 55%,#6d1aa8 70%,#1a0a5a);transition:background .6s}
+#app[data-s=vs],#app[data-s=worlds]{background:linear-gradient(#3b0a9a,#8a14b8 45%,#4a0fa0 55%,#2a0a70)}
+#app[data-s=mission]{background:linear-gradient(#050520,#0a1a50 60%,#1a0a50)}
+#app[data-s=mission][data-m=create]{background:linear-gradient(#050520,#0a3a6a 60%,#2a0a60)}
+#app[data-s=mission][data-m=game]{background:linear-gradient(#050520,#4a0a50 60%,#0a2a70)}
+#app[data-s=mission][data-m=study]{background:linear-gradient(#050520,#2a1a6a 60%,#0a3a5a)}
+#app[data-s=mission][data-m=everyday]{background:linear-gradient(#050520,#1a3a6a 60%,#4a1a6a)}
+.stars{position:absolute;inset:0;background:radial-gradient(1px 1px at 10% 20%,#fff,transparent),radial-gradient(1px 1px at 30% 60%,#9ff,transparent),radial-gradient(2px 2px at 55% 15%,#fff,transparent),radial-gradient(1px 1px at 75% 35%,#f9f,transparent),radial-gradient(1px 1px at 90% 70%,#fff,transparent),radial-gradient(2px 2px at 20% 85%,#9cf,transparent),radial-gradient(1px 1px at 65% 80%,#fff,transparent);background-size:300px 300px;animation:tw 6s linear infinite}
+@keyframes tw{to{background-position:300px 150px}}.stars::after{content:"";position:absolute;inset:0;background:radial-gradient(2px 2px at 20% 90%,#e879f9,transparent),radial-gradient(2px 2px at 60% 95%,#22d3ee,transparent),radial-gradient(2px 2px at 85% 85%,#ffe94a,transparent);background-size:400px 400px;animation:up 9s linear infinite}@keyframes up{to{background-position:0 -400px}}
+.floor{position:absolute;left:-60%;right:-60%;bottom:-2%;height:42%;transform:perspective(260px) rotateX(58deg);transform-origin:50% 100%;background:repeating-linear-gradient(90deg,rgba(34,211,238,.55) 0 2px,transparent 2px 60px),repeating-linear-gradient(0deg,rgba(232,121,249,.55) 0 2px,transparent 2px 50px);animation:fl 1.6s linear infinite;mask-image:linear-gradient(transparent,#000 40%)}
+@keyframes fl{to{background-position:0 50px}}
+.scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);z-index:9}
+#app.flick #stage{animation:fk .35s steps(4)}
+@keyframes fk{0%{opacity:0;transform:translateX(-8px) skewX(4deg)}50%{opacity:.5;filter:hue-rotate(90deg)}100%{opacity:1}}
+#stage{position:absolute;inset:0;z-index:2}
+.sc{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.2vh;padding:56px 14px 14px;text-align:center;overflow-y:auto}
+h1,h2,h3{font-weight:400;line-height:1.3}
+.logo{font:inherit;background:none;border:0;cursor:pointer;font-size:clamp(34px,10vw,110px);line-height:1.15;color:#fff;background:linear-gradient(#fff 20%,#8fe3ff 45%,#2a86d8 80%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(4px 4px 0 #000) drop-shadow(-3px 0 0 var(--mg));transition:.2s;animation:fl2 3s infinite}
+.logo:hover,.logo:focus-visible{filter:drop-shadow(4px 4px 0 #000) drop-shadow(-5px 0 0 var(--mg)) drop-shadow(0 0 22px var(--cy));transform:scale(1.05);outline:0}
+@keyframes fl2{0%,92%,100%{transform:none}94%{transform:translateX(5px)}96%{transform:translateX(-5px)}}
+.blink{font-size:clamp(9px,2.2vw,16px);animation:bl 1.2s steps(2) infinite;color:var(--cy)}
+@keyframes bl{50%{opacity:0}}
+.btn{font:inherit;font-size:clamp(9px,2vw,13px);color:#fff;background:#14146a;border:3px solid var(--cy);padding:12px 16px;cursor:pointer;box-shadow:4px 4px 0 var(--mg);text-transform:uppercase;transition:.1s}
+.btn:hover,.btn:focus-visible{background:var(--cy);color:#000;outline:0;transform:translate(-2px,-2px)}
+.btn.alt{border-color:var(--mg);box-shadow:4px 4px 0 var(--cy)}
+.row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.hud{position:absolute;top:8px;left:10px;right:10px;z-index:5;display:flex;justify-content:space-between;font-size:10px;color:var(--cy);gap:8px}
+.hud button{font:inherit;font-size:9px;background:#0008;color:var(--cy);border:2px solid var(--cy);padding:6px 8px;cursor:pointer}
+.bars{display:flex;gap:8px;width:min(900px,95vw);align-items:center;font-size:10px}
+.bar{flex:1;height:14px;border:2px solid #fff;background:linear-gradient(90deg,#e0446a 8%,var(--yl) 8%)}
+.bar.r{transform:scaleX(-1)}
+.vs{display:flex;align-items:center;justify-content:center;gap:2vw;width:100%}
+.fighter{font:inherit;background:none;border:0;color:#fff;cursor:pointer;width:min(34vw,300px);animation:hv 3s ease-in-out infinite;transition:.2s}
+.fighter:nth-child(3){animation-delay:-1.5s}
+.fighter svg{width:100%;image-rendering:pixelated;filter:drop-shadow(0 0 18px var(--g))}
+.fighter:hover,.fighter:focus-visible{transform:scale(1.1);outline:0}
+.fighter small{display:block;font-size:clamp(7px,1.6vw,12px);line-height:1.6;margin-top:6px}
+.fighter.u{--g:#22d3ee}.fighter.c{--g:#e879f9}
+@keyframes hv{50%{translate:0 -14px}}
+.big{font-size:clamp(50px,13vw,150px);color:var(--yl);text-shadow:6px 6px 0 #e0446a;animation:pop .6s both}
+@keyframes pop{from{transform:scale(3);opacity:0}}
+.win{background:#0a0a40ee;border:4px solid var(--cy);box-shadow:6px 6px 0 var(--mg),0 0 30px #22d3ee66;padding:18px;max-width:min(680px,94vw);font-size:clamp(8px,1.8vw,12px);line-height:1.9;text-align:left}
+.win h3{font-size:clamp(11px,2.5vw,18px);color:var(--yl);margin-bottom:10px}
+.win ul{padding-left:18px}
+.ov{position:absolute;inset:0;z-index:6;background:#000b;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding:14px;animation:fk .3s}
+.ov .win{max-height:85vh;overflow:auto}
+.ov svg{width:110px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:min(900px,96vw)}
+@media(max-width:640px){.grid4{grid-template-columns:1fr 1fr}.vs{gap:0}}
+.card{font:inherit;font-size:clamp(8px,1.7vw,12px);color:#fff;background:#12125a;border:3px solid #6670ff;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;gap:8px;align-items:center;line-height:1.6;transition:.15s;box-shadow:4px 4px 0 #000}
+.card:hover,.card:focus-visible,.card.on{border-color:var(--yl);transform:translateY(-4px);outline:0;box-shadow:4px 4px 0 var(--mg),0 0 18px var(--yl)}
+.card .ico{width:44px;color:var(--cy)}
+.card.on .ico,.card:hover .ico{color:var(--yl)}
+.ico{shape-rendering:crispEdges}
+.t{font-size:clamp(14px,3.6vw,34px);color:#fff;text-shadow:3px 3px 0 var(--mg)}
+.p{font-size:clamp(8px,1.8vw,12px);line-height:1.9;max-width:640px}
+.hit{animation:pop .5s both}
+.link{color:var(--cy)}
+.circ{width:min(500px,80vw);height:6px;background:linear-gradient(90deg,var(--cy),#fff,var(--mg));box-shadow:0 0 14px var(--cy);animation:pu 1.5s infinite alternate}
+@keyframes pu{from{opacity:.5}}
+.chips{display:flex;align-items:center;justify-content:center;gap:4vw}
+.chips svg{width:min(30vw,200px);animation:hv 3s infinite;filter:drop-shadow(0 0 14px var(--g))}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div id="app" data-s="start"><div class="stars"></div><div class="floor"></div><div class="scan"></div>
+<div class="hud"><span id="hl">1P 01</span><span><button data-act="snd" id="snd">SOUND: OFF</button> <button data-act="back" id="bk" aria-label="Back">◀ BACK</button></span></div>
+<main id="stage"></main></div>
+<script>
+const $=s=>document.querySelector(s),app=$('#app'),st=$('#stage');
+const S={scene:'start',mission:null,inspect:null,hist:[],world:'a',info:null,snd:false,src:false};
+const IC={create:['...#...','..###..','#######','.#####.','..###..','.##.##.','##...##'],game:['.......','..#.#..','#######','##.#.##','#######','##...##','.......'],study:['##...##','#.#.#.#','#.#.#.#','#.#.#.#','#.#.#.#','#######','.......'],everyday:['#######','#.....#','#.###.#','#.....#','#######','..##...','.#.....']};
+const ico=n=>`<svg class="ico" viewBox="0 0 7 7" fill="currentColor">${IC[n].map((r,y)=>[...r].map((c,x)=>c=='#'?`<rect x="${x}" y="${y}" width="1" height="1"/>`:'').join('')).join('')}</svg>`;
+function chip(k){const u=k=='u',C=u?['#0b2a6b','#22d3ee','#60a5fa','#e0f7ff']:['#3b0a6b','#e879f9','#a78bfa','#fdf0ff'];let r='';const R=(x,y,w,h,f)=>r+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"/>`;
+R(3,3,10,10,C[0]);R(3,3,10,1,C[1]);R(3,12,10,1,C[1]);R(3,3,1,10,C[1]);R(12,3,1,10,C[1]);
+for(let i=4;i<12;i+=2){R(i,1,1,2,C[2]);R(i,13,1,2,C[2]);R(1,i,2,1,C[2]);R(13,i,2,1,C[2])}
+if(u){for(let i=0;i<3;i++)for(let j=0;j<3;j++)R(5+i*2,5+j*2,1,1,(i+j)%2?C[1]:C[3])}else{for(let i=0;i<2;i++)for(let j=0;j<2;j++)R(5+i*3,5+j*3,2,2,(i+j)%2?C[1]:C[3])}
+R(4,4,1,1,C[3]);return `<svg viewBox="0 0 16 16" shape-rendering="crispEdges">${r}</svg>`}
+const P={u:{n:'CORE ULTRA SERIES 3',c:'PANTHER LAKE',tag:'FOR BIGGER COMPUTING AMBITIONS.',d:'Designed for more demanding creation, gaming, productivity, and AI workloads.',w:['Demanding creative applications','Gaming and graphics-intensive apps','Complex productivity and heavy multitasking','More advanced AI-assisted workflows']},
+c:{n:'CORE SERIES 3',c:'WILDCAT LAKE',tag:'BUILT AROUND YOUR EVERYDAY.',d:'Modern computing and right-sized AI capabilities for more price-sensitive laptops.',w:['Everyday computing and general productivity','Study, research and communication','Browsing, calls and streaming','Practical, right-sized AI assistance']}};
+const M={create:{t:'CREATE',n:'01',k:'u',d:'Video editors, music producers, creative pros.',r:'Creative workstation online. Timelines, layers and tracks light up.',why:'Demanding creative applications are the kind of work Core Ultra Series 3 is designed for, with more headroom for graphics and AI-assisted workflows.'},
+game:{t:'GAME',n:'02',k:'u',d:'Gamers and graphics-intensive workloads.',r:'Arcade cabinet powered up. Graphics-heavy worlds loading.',why:'Gaming and graphics-intensive apps are a core target of Core Ultra Series 3, whose family offers up to 12 Xe-cores for graphics.'},
+study:{t:'STUDY & WORK',n:'03',k:'c',d:'Documents, research, coding, many apps at once.',r:'Desk lamp on. Laptop, notes and books ready.',why:'Documents, research, coding and everyday productivity are what Core Series 3 is built around, with right-sized AI in more price-sensitive laptops. If you also edit pro-level video, look at Core Ultra.'},
+everyday:{t:'EVERYDAY COMPUTING',n:'04',k:'c',d:'Browsing, calls, streaming, practical AI.',r:'Messages incoming. Video call connected, stream buffering.',why:'Browsing, communication, streaming and practical AI help are exactly the everyday priorities Core Series 3 is designed for.'}};
+const WI=[['create',0],['game',1],['study',2],['everyday',3]];
+const WT={a:['Video editing & content creation: timelines, effects and exports are demanding, sustained workloads.','Gaming & graphics: graphics-intensive play is a core target for this family.','Productivity & multitasking: many heavy apps open at once.','AI-assisted workflows: more advanced AI capabilities for demanding tasks.'],
+b:['Student projects: research, writing and presentations, every day.','Productivity apps: documents, spreadsheets and coding environments.','Multitasking & communication: calls, chat and many tabs.','Everyday AI: right-sized AI help for practical tasks.']};
+const SRC=[['The Register: Panther Lake launch','https://www.theregister.com/2026/01/05/intel_unleashes_panther_lake_cpus/'],['TechSpot: Core Ultra Series 3 on 18A','https://www.techspot.com/news/110816-intel-launches-core-ultra-series-3-panther-lake.html'],['HotHardware: Core Series 3 launch','https://hothardware.com/news/intel-launches-core-series-3-wildcat-lake'],['HotHardware: Wildcat Lake (quotes Intel: up to 17 TOPS)','https://hothardware.com/news/intel-details-wildcat-lake-trimmed-compute-die-area-38-percent']];
+const hdr=(a,b)=>`<div class="bars"><div class="bar"></div><span>1P</span><span>KO</span><span>2P</span><div class="bar r"></div></div>`;
+const fighter=k=>`<button class="fighter ${k}" data-act="inspect" data-k="${k}" aria-label="Inspect ${P[k].n}">${chip(k)}<small>${P[k].n}<br>${P[k].c}</small></button>`;
+const SC={
+start:()=>`<section class="sc"><button class="logo" data-act="go" data-to="vs" data-focus>PRESS<br>START</button><p class="blink">INSERT A COIN TO CONTINUE</p><p class="p" style="font-size:8px;opacity:.7">♪ TURN SOUND ON (TOP RIGHT) FOR CHIPTUNE MUSIC</p></section>`,
+vs:()=>`<section class="sc">${hdr()}<div class="vs">${fighter('u')}<div class="big">VS</div>${fighter('c')}</div><p class="p">TAP EITHER CHIP TO INSPECT IT. TWO COMPUTING PATHS, NO ENEMIES.</p><button class="btn" data-act="go" data-to="worlds" data-focus>CONTINUE ▶</button>
+${S.inspect?`<div class="ov" data-act="close"><div class="win" onclick="event.stopPropagation()">${(k=>`<div style="text-align:center">${chip(k)}</div><h3>PLAYER ${k=='u'?1:2}: ${P[k].n}</h3><p>CODENAME: ${P[k].c}</p><br><p>INTENDED WORKLOADS</p><ul>${P[k].w.map(x=>`<li>${x}</li>`).join('')}</ul></p>`)(S.inspect)}</div><div class="row"><button class="btn" data-act="close" data-focus>◀ BACK</button><button class="btn alt" data-act="go" data-to="worlds">CONTINUE ▶</button></div></div>`:''}</section>`,
+worlds:()=>{const k=S.world=='a'?'u':'c',p=P[k];return `<section class="sc"><div class="row"><button class="btn ${k=='u'?'':'alt'}" data-act="world" data-w="a">WORLD A</button><button class="btn ${k=='c'?'':'alt'}" data-act="world" data-w="b">WORLD B</button></div>
+<h2 class="t" style="text-shadow:3px 3px 0 ${k=='u'?'#2563eb':'#9333ea'}">${p.n}</h2><p class="blink" style="color:${k=='u'?'#22d3ee':'#c4b5fd'}">${p.tag}</p><p class="p">${p.d}</p>
+<div class="grid4">${WI.map(([n,i])=>`<button class="card ${S.info==i?'on':''}" data-act="info" data-i="${i}">${ico(n)}${p.w[i].split(' ').slice(0,2).join(' ')}</button>`).join('')}</div>
+<div class="win" style="min-height:70px">${S.info!=null?WT[S.world][S.info]:'TAP AN ICON TO EXPLORE THIS WORKLOAD.'}</div>
+<div class="row"><button class="btn alt" data-act="go" data-to="vs">◀ VS SCREEN</button><button class="btn" data-act="go" data-to="mission" data-focus>CONTINUE ▶</button></div></section>`},
+mission:()=>`<section class="sc"><h2 class="t">PLAYER DETECTED.</h2><p class="p">WHAT DO YOU DO ON YOUR LAPTOP?</p>
+<div class="grid4">${Object.entries(M).map(([k,m])=>`<button class="card ${S.mission==k?'on':''}" data-act="mission" data-m="${k}">${m.n}${ico(k)}<b>${m.t}</b><span>${m.d}</span></button>`).join('')}</div>
+<div class="win" id="react">HOVER OR TAP A MISSION. NOTHING IS CHOSEN FOR YOU.</div>
+<button class="btn alt" data-act="back">◀ BACK</button>${S.lock?`<div class="ov"><div class="big hit" style="font-size:clamp(20px,6vw,60px)">MISSION LOCKED</div></div>`:''}</section>`,
+match:()=>{const m=M[S.mission||'create'],k=m.k,o=k=='u'?'c':'u';return `<section class="sc"><p class="blink" style="color:var(--yl)">★ PLAYER UNLOCKED ★</p><p class="p">YOUR MISSION: <span style="color:var(--yl)">${m.t}</span></p><h2 class="t hit">YOUR MATCH:<br>INTEL ${P[k].n}</h2>
+<div class="fighter ${k}" style="width:min(36vw,200px);cursor:default">${chip(k)}</div><div class="win"><h3>${P[k].c}</h3>${m.why}<br><br>A mission suggests, it doesn't decide. Your own needs and the laptop configuration matter.</div>
+<div class="row"><button class="btn" data-act="go" data-to="found" data-focus>EXPLORE THE SPECS</button><button class="btn alt" data-act="go" data-to="mission">TRY ANOTHER MISSION</button><button class="btn alt" data-act="other">EXPLORE THE OTHER PROCESSOR</button></div></section>`},
+found:()=>`<section class="sc"><h2 class="t">TWO DIFFERENT MISSIONS.<br>ONE SHARED FOUNDATION.</h2><div class="chips">${['u','c'].map(k=>`<div style="--g:${k=='u'?'#22d3ee':'#e879f9'}">${chip(k)}</div>`).join('')}</div><div class="circ"></div><h2 class="big" style="font-size:clamp(28px,8vw,80px)">INTEL 18A</h2><p class="p">Both families are built on Intel 18A manufacturing technology.</p>
+<div class="row" style="align-items:stretch">${['u','c'].map(k=>`<div class="win" style="width:min(330px,92vw)"><h3>${P[k].n}</h3>${P[k].c}<br>${P[k].d}<br><br>${k=='u'?'Up to 16 CPU cores<br>Up to 12 Xe-cores<br>Up to 50 NPU TOPS':'Up to 6 CPU cores<br>Up to 2 Xe-cores<br>Up to 17 NPU TOPS'}</div>`).join('')}</div>
+<p class="p" style="font-size:9px">Maximum family-level specs; they vary by processor model. NPU TOPS is not total platform AI performance.</p>
+<div class="row"><button class="btn alt" data-act="back">◀ BACK</button><button class="btn" data-act="go" data-to="final" data-focus>CONTINUE ▶</button><button class="btn alt" data-act="src">SOURCES</button></div>
+${S.src?`<div class="ov"><div class="win"><h3>SOURCES</h3><p>Figures checked against launch coverage (some quoting Intel). Confirm final numbers on intel.com.</p><ul>${SRC.map(s=>`<li><a class="link" target="_blank" rel="noopener" href="${s[1]}">${s[0]}</a></li>`).join('')}</ul></div><button class="btn" data-act="src" data-focus>CLOSE</button></div>`:''}</section>`,
+final:()=>`<section class="sc"><div class="chips">${['u','c'].map(k=>`<div style="--g:${k=='u'?'#22d3ee':'#e879f9'}">${chip(k)}</div>`).join('')}</div><div class="circ"></div><h1 class="t" style="font-size:clamp(16px,5vw,52px);line-height:1.5">TWO MINDS.<br>TWO MISSIONS.<br>ONE FOUNDATION.</h1><p class="blink" style="color:var(--yl)">CHOOSE YOUR PLAYER BASED ON YOUR MISSION.</p>
+<div class="row"><button class="btn" data-act="restart" data-focus>PLAY AGAIN</button><button class="btn alt" data-act="go" data-to="mission">EXPLORE YOUR MATCH</button><button class="btn alt" data-act="share">SHARE</button></div></section>`};
+function render(){app.dataset.s=S.scene;st.innerHTML=SC[S.scene]();$('#bk').style.visibility=S.hist.length?'visible':'hidden';$('#hl').textContent='STAGE '+(Object.keys(SC).indexOf(S.scene)+1)+'/7';const f=st.querySelector('[data-focus]');if(f)f.focus({preventScroll:true})}
+function beep(f=660){if(!S.snd)return;try{const c=beep.c||(beep.c=new AudioContext()),o=c.createOscillator(),g=c.createGain();o.type='square';o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(c.destination);o.start();o.frequency.setValueAtTime(f*1.5,c.currentTime+.08);o.stop(c.currentTime+.18)}catch(e){}}
+const MU={t:0,i:0,id:null};
+function tone(f,t,d,ty,v){const c=beep.c,o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d)}
+function tick(){const c=beep.c,f=x=>220*2**(x/12);while(MU.t<c.currentTime+.4){const i=MU.i,b=(i>>3)%4,r=[0,-4,3,-2][b],ch=b?[0,4,7,12]:[0,3,7,12],n=ch[[0,1,2,3,2,1,2,3][i%8]];tone(f(r+n+12),MU.t,.15,'square',.018);if(i%2==0)tone(f(r-12),MU.t,.22,'triangle',.06);if(i%4==0)tone(110,MU.t,.1,'sine',.09);MU.t+=.17;MU.i++}}
+function music(on){clearInterval(MU.id);if(on){try{beep.c=beep.c||new AudioContext();beep.c.resume();MU.t=beep.c.currentTime+.05;MU.id=setInterval(tick,100)}catch(e){}}}
+document.addEventListener('visibilitychange',()=>{if(S.snd)music(!document.hidden)});
+function go(to){S.hist.push(S.scene);S.scene=to;S.inspect=null;S.info=null;S.src=false;flick();render()}
+function back(){if(S.inspect){S.inspect=null;return render()}const p=S.hist.pop();if(p){S.scene=p;S.src=false;flick();render()}}
+function flick(){app.classList.remove('flick');void app.offsetWidth;app.classList.add('flick')}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-act]');if(!t)return;if(t.classList.contains('ov')&&e.target!==t)return;const a=t.dataset.act;beep(a=='back'||a=='close'?440:660);
+if(a=='go')go(t.dataset.to);else if(a=='back')back();else if(a=='inspect'){S.inspect=t.dataset.k;render()}else if(a=='close'){S.inspect=null;render()}
+else if(a=='world'){S.world=t.dataset.w;S.info=null;render()}else if(a=='info'){S.info=+t.dataset.i;render()}
+else if(a=='mission'){S.mission=t.dataset.m;S.lock=true;render();setTimeout(()=>{S.lock=false;go('match')},900)}
+else if(a=='other'){const k=M[S.mission].k=='u'?'c':'u';S.hist.push('match');S.scene='vs';S.inspect=k;flick();render()}
+else if(a=='restart'){S.hist=[];S.mission=null;S.scene='start';S.inspect=null;S.world='a';flick();render()}
+else if(a=='share'){const d={title:'CPU SELECT SCREEN',text:'Two minds. Two missions. One foundation.',url:location.href};if(navigator.share)navigator.share(d).catch(()=>{});else if(navigator.clipboard){navigator.clipboard.writeText(d.url);t.textContent='LINK COPIED!'}}
+else if(a=='src'){S.src=!S.src;render()}
+else if(a=='snd'){S.snd=!S.snd;t.textContent='SOUND: '+(S.snd?'ON':'OFF');music(S.snd);beep(880)}});
+function react(e){const t=e.target.closest&&e.target.closest('[data-m]');if(!t||S.scene!='mission')return;app.dataset.m=t.dataset.m;const r=$('#react');if(r)r.textContent=M[t.dataset.m].r}
+document.addEventListener('mouseover',react);document.addEventListener('focusin',react);
+document.addEventListener('keydown',e=>{if(e.key=='Escape')back()});
+render();
+</script></body></html>
